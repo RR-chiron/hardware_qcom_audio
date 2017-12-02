@@ -29,7 +29,7 @@
 
 #define LOG_TAG "qahwi"
 /*#define LOG_NDEBUG 0*/
-#define LOG_NDDEBUG 0
+#define LOG_NDEBUG 0
 
 #include <errno.h>
 #include <cutils/log.h>

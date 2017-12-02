@@ -19,8 +19,8 @@
 
 #define LOG_TAG "msm8974_platform"
 //#define LOG_NDEBUG 0
-#define LOG_NDDEBUG 0
-/*#define VERY_VERY_VERBOSE_LOGGING*/
+#define LOG_NDEBUG 0
+#define VERY_VERY_VERBOSE_LOGGING
 #ifdef VERY_VERY_VERBOSE_LOGGING
 #define ALOGVV ALOGV
 #else
@@ -358,6 +358,8 @@ static int pcm_device_table[AUDIO_USECASE_MAX][2] = {
                                           AFE_PROXY_RECORD_PCM_DEVICE},
     [USECASE_AUDIO_RECORD_AFE_PROXY] = {AFE_PROXY_PLAYBACK_PCM_DEVICE,
                                         AFE_PROXY_RECORD_PCM_DEVICE},
+    [USECASE_AUDIO_ULTRASOUND_RX] = {ULTRASOUND_PCM_DEVICE, -1},
+    [USECASE_AUDIO_ULTRASOUND_TX] = {-1, ULTRASOUND_PCM_DEVICE},
     [USECASE_AUDIO_PLAYBACK_EXT_DISP_SILENCE] = {MULTIMEDIA9_PCM_DEVICE, -1},
 
 };
@@ -422,6 +424,7 @@ static const char * const device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED_VBAT] = "voice-speaker-2-protected-vbat",
     [SND_DEVICE_OUT_SPEAKER_PROTECTED_RAS] = "speaker-protected",
     [SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT_RAS] = "speaker-protected-vbat",
+    [SND_DEVICE_OUT_ULTRASOUND_HANDSET] = "ultrasound-handset",
 
     /* Capture sound devices */
     [SND_DEVICE_IN_HANDSET_MIC] = "handset-mic",
@@ -458,6 +461,7 @@ static const char * const device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_IN_VOICE_TTY_VCO_HANDSET_MIC] = "voice-tty-vco-handset-mic",
     [SND_DEVICE_IN_VOICE_TTY_HCO_HEADSET_MIC] = "voice-tty-hco-headset-mic",
     [SND_DEVICE_IN_VOICE_RX] = "voice-rx",
+    [SND_DEVICE_IN_ULTRASOUND_MIC] = "ultrasound-mic",
 
     [SND_DEVICE_IN_VOICE_REC_MIC] = "voice-rec-mic",
     [SND_DEVICE_IN_VOICE_REC_MIC_NS] = "voice-rec-mic",
@@ -793,6 +797,8 @@ static struct name_to_index usecase_name_index[AUDIO_USECASE_MAX] = {
     {TO_NAME_INDEX(USECASE_AUDIO_SPKR_CALIB_TX)},
     {TO_NAME_INDEX(USECASE_AUDIO_PLAYBACK_AFE_PROXY)},
     {TO_NAME_INDEX(USECASE_AUDIO_RECORD_AFE_PROXY)},
+    {TO_NAME_INDEX(USECASE_AUDIO_ULTRASOUND_RX)},
+    {TO_NAME_INDEX(USECASE_AUDIO_ULTRASOUND_TX)},
     {TO_NAME_INDEX(USECASE_AUDIO_PLAYBACK_EXT_DISP_SILENCE)},
 };
 
@@ -4397,6 +4403,9 @@ int platform_set_parameters(void *platform, struct str_parms *parms)
         my_data->max_mic_count = atoi(value);
         ALOGV("%s: max_mic_count %d", __func__, my_data->max_mic_count);
     }
+    
+    kv_pairs = str_parms_to_str(parms);
+    ALOGI("Reached end. Pairs: %s", kv_pairs);
 
     /* handle audio calibration parameters */
     set_audiocal(platform, parms, value, len);

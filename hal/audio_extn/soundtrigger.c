@@ -28,7 +28,7 @@
  */
 #define LOG_TAG "soundtrigger"
 /* #define LOG_NDEBUG 0 */
-#define LOG_NDDEBUG 0
+#define LOG_NDEBUG 0
 
 #include <errno.h>
 #include <stdbool.h>
@@ -235,6 +235,7 @@ void audio_extn_sound_trigger_update_device_status(snd_device_t snd_device,
     int device_type = -1;
 
     if (!st_dev)
+        ALOGE("%s: !st_dev", __func__);
        return;
 
     if (snd_device >= SND_DEVICE_OUT_BEGIN &&
